@@ -1,41 +1,15 @@
-# Website
+# DevOps Training
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+In my daily work, I work with different companies and help them set up and
+define their DevOps processes. I also work with mentees that reach out to me via
+[Coding Coach](https://codingcoach.io). Here I learned that all these people I
+work with, have the same problems, me included. And that is to understand and
+implement DevOps. It's one of these topics in the IT industry that gets bigger
+and bigger, the more you learn about it.
 
-### Installation
+The goal of this repository is to show a path and resources that one can use to
+learn about DevOps. And also helps me collect all the different resources, that
+I keep searching for, again and again, when someone asks me about something, I
+already forgot again.
 
-```
-$ yarn
-```
-
-### Local Development
-
-```
-$ yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-### Build
-
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+So get starting browsing around: https://devops-training.new-bridge.dev
