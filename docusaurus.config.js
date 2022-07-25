@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'DevOps Training',
-  tagline: 'The DevOps Training',
+  tagline: 'Resources to get started with DevOps',
   url: 'https://devops-training.new-bridge.dev',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -61,7 +61,7 @@ const config = {
             type: 'doc',
             docId: 'intro',
             position: 'left',
-            label: 'Tutorial'
+            label: 'Resources'
           },
           {
             href: 'https://github.com/elft3r/devops-training',
@@ -77,21 +77,8 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
+                label: 'DevOps Training',
                 to: '/docs/intro'
-              }
-            ]
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Blog',
-                href: 'https://new-bridge.dev'
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/elft3r'
               }
             ]
           },
