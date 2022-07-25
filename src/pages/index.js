@@ -32,7 +32,7 @@ export default function Home () {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description='DevOps Training provides resources to learn and understands DevOps'
+      description={`${siteConfig.tagline}`}
     >
       <HomepageHeader />
       <main>
