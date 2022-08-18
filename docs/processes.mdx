@@ -30,3 +30,52 @@ opinion, this is a very important one. Don't keep all the snowflakes and special
 cases and put in place automation for them. Instead, spend time putting a
 standard in place and implementing the automation for this standard. This will
 save you in the long run.
+
+## The twelve-factor app
+
+One standard for writing software, that is being used in the area of
+Software-as-a-Service (SaaS) is [the twelve-factor app](https://12factor.net/).
+Implementing these best practices for your application helps you in adopting the
+DevOps principles. It also gives you clear interfaces to use for example for
+logging, networking, or environment configuration. This is especially useful
+when trying to bridge the gap between the developer tasks and IT operations
+tasks.
+
+## Handoff between Dev and Ops
+
+In the [What is DevOps?](what-is-devops.mdx) section, I mentioned the wall of
+confusion, and that the goal is to get rid of it. But, to get rid of it, you
+need to put a process in place, that is doing the tasks that before were done by
+developers and operations people and automating these. But how do you do this?
+
+<figure>
+
+![Wall of Confusion](http://dev2ops.org/wp-content/uploads/2010/02/WallOfConfusion.png)
+
+  <figcaption>Figure: <a href="http://dev2ops.org/2010/02/what-is-devops/">What is DevOps? - Wall of Confusion</a></figcaption>
+  </figure>
+
+Before DevOps was a thing, we already build and deployed software. The
+separation was clear and the developers were responsible for writing the code.
+As well as for creating the packages and in the best case writing the
+documentation what was needed to deploy the app.
+
+Then the package as well as the documentation was handed over to the operations
+team, which was responsible for providing the infrastructure. This contained
+everything from ordering hardware, wiring the servers, up to installing and
+configuring the operating system. Including setting up these systems for high
+availability and business continuity. On top of these, the software was then
+being installed.
+
+Both sides, the developers and operation people have their own processes for
+each of their tasks. With DevOps one challenge is to rework both sides and put
+also the bridge between processes in place. And like so many times in IT there
+is not one correct way of doing this. Instead you have to decide what works best
+for your situation. There are many variables, that you need to account for. For
+example, is the software written in house, or provided by a third-party vendor.
+Or do you want to have the app deployment code part of the app code or
+infrastructure code. I have seen many different ways, and different approaches
+working for different teams. As well as, one approach working for one team, but
+not for another team. This means, it depends on the application, the teams, and
+the processes already in place. But one of the things all had in common, was a
+high degree of automation.
