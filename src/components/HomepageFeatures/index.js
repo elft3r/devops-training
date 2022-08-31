@@ -4,32 +4,35 @@ import styles from './styles.module.css'
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
+    title: 'Understand the basics',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        DevOps covers a lot of ground and it can be difficult to find a starting
+        point. With these resource you get the basics and links to other
+        resources with more information.
       </>
     )
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Not technology driven',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Technical people always try to argue and focus on technical things.
+        Here, I try to put the core concepts into the focus, as the technologies
+        change faster than the core concepts.
       </>
     )
   },
   {
-    title: 'Powered by React',
+    title: 'Hand-on tutorials',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Skill based tutorials to get hands-on experience with DevOps. Depending
+        on whether your a developer or from operations you can start applying
+        the concepts and strengthen your skills.
       </>
     )
   }
