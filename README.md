@@ -1,6 +1,7 @@
 # DevOps Training
 
 > **Warning**
+>
 > This repo is new and still in the early stages. Please let me know your
 > feedback and ideas on what to add.
 
