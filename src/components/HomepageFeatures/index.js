@@ -9,8 +9,8 @@ const FeatureList = [
     description: (
       <>
         DevOps covers a lot of ground and it can be difficult to find a starting
-        point. With these resource you get the basics and links to other
-        resources with more information.
+        point. With these resource you get the basics and links to additional
+        resources.
       </>
     )
   },
@@ -19,9 +19,9 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Technical people always try to argue and focus on technical things.
-        Here, I try to put the core concepts into the focus, as the technologies
-        change faster than the core concepts.
+        Technical people always try to focus on technicalities. Here, the focus
+        is on the core concepts. Technologies change faster than the core
+        concepts.
       </>
     )
   },
