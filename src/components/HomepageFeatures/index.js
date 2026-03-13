@@ -26,12 +26,12 @@ const FeatureList = [
     )
   },
   {
-    title: 'Hand-on tutorials',
+    title: 'Hands-on tutorials',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Skill based tutorials to get hands-on experience with DevOps. Depending
-        on whether your a developer or from operations you can start applying
+        Skill-based tutorials to get hands-on experience with DevOps. Depending
+        on whether you're a developer or from operations you can start applying
         the concepts and strengthen your skills.
       </>
     )
