@@ -15,14 +15,9 @@ const config = {
   favicon: 'img/favicon.ico',
   trailingSlash: false,
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'elft3r', // Usually your GitHub org/user name.
-  projectName: 'devops-training', // Usually your repo name.
+  organizationName: 'elft3r',
+  projectName: 'devops-training',
 
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: 'warn'
@@ -41,8 +36,6 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/elft3r/devops-training/tree/main/'
         },
@@ -59,7 +52,7 @@ const config = {
       navbar: {
         title: 'DevOps Training',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'DevOps Training Logo',
           src: 'img/logo.svg'
         },
         items: [
