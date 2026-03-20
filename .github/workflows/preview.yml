@@ -62,6 +62,7 @@ jobs:
           script: |
             const url = process.env.DEPLOY_URL;
             const sha = context.sha.substring(0, 7);
+            const now = new Date().toUTCString();
             const body = [
               '### Preview Deployment',
               '',
@@ -70,6 +71,8 @@ jobs:
               '| Site | URL | Commit |',
               '|---|---|---|',
               `| DevOps Training | ${url} | \`${sha}\` |`,
+              '',
+              `> Last updated: ${now}`,
               '',
             ].join('\n');
 
