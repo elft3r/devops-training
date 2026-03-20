@@ -5,11 +5,6 @@ on: # yamllint disable-line rule:truthy
   pull_request:
     types: [opened, synchronize, reopened, closed]
 
-permissions:
-  contents: read
-  pull-requests: write
-  issues: write
-
 concurrency:
   group: preview-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -18,6 +13,9 @@ jobs:
   deploy-preview:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     env:
       PROJECT: ${{ github.event.repository.name }}
       PR_BRANCH: pr-${{ github.event.pull_request.number }}
@@ -63,14 +61,15 @@ jobs:
         with:
           script: |
             const url = process.env.DEPLOY_URL;
+            const sha = context.sha.substring(0, 7);
             const body = [
               '### Preview Deployment',
               '',
               'This PR has been deployed for preview:',
               '',
-              '| Site | URL |',
-              '|---|---|',
-              `| DevOps Training | ${url} |`,
+              '| Site | URL | Commit |',
+              '|---|---|---|',
+              `| DevOps Training | ${url} | \`${sha}\` |`,
               '',
             ].join('\n');
 
@@ -106,6 +105,8 @@ jobs:
   cleanup-preview:
     if: github.event.action == 'closed'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Delete preview deployments
         uses: actions/github-script@v7
@@ -129,7 +130,9 @@ jobs:
             const deployments = [];
             let page = 1;
 
-            while (true) {
+            const maxPages = 50;
+
+            while (page <= maxPages) {
               const res = await fetch(
                 `${url}?page=${page}`, { headers }
               );
