@@ -1,3 +1,4 @@
+---
 name: Preview Deployment
 
 on:
@@ -17,6 +18,9 @@ jobs:
   deploy-preview:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
+    env:
+      PROJECT: ${{ github.event.repository.name }}
+      PR_BRANCH: pr-${{ github.event.pull_request.number }}
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +40,9 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages project create ${{ github.event.repository.name }} --production-branch=main
+          command: >-
+            pages project create ${{ env.PROJECT }}
+            --production-branch=main
         continue-on-error: true
 
       - name: Deploy to Cloudflare Pages
@@ -45,39 +51,53 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy build --project-name=${{ github.event.repository.name }} --branch=pr-${{ github.event.pull_request.number }}
+          command: >-
+            pages deploy build
+            --project-name=${{ env.PROJECT }}
+            --branch=${{ env.PR_BRANCH }}
 
       - name: Comment preview URL on PR
         uses: actions/github-script@v7
         env:
-          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+          DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
         with:
           script: |
-            const body = `### Preview Deployment\n\nThis PR has been deployed for preview:\n\n` +
-              `| Site | URL |\n|---|---|\n` +
-              `| DevOps Training | ${process.env.DEPLOYMENT_URL} |\n`;
+            const url = process.env.DEPLOY_URL;
+            const body = [
+              '### Preview Deployment',
+              '',
+              'This PR has been deployed for preview:',
+              '',
+              '| Site | URL |',
+              '|---|---|',
+              `| DevOps Training | ${url} |`,
+              '',
+            ].join('\n');
 
-            // Find existing bot comment
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-            const botComment = comments.find(c =>
-              c.user.type === 'Bot' && c.body.includes('### Preview Deployment')
-            );
-
-            if (botComment) {
-              await github.rest.issues.updateComment({
+            const { data: comments } = await github.rest.issues
+              .listComments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                comment_id: botComment.id,
+                issue_number: context.issue.number,
+              });
+            const existing = comments.find(c =>
+              c.user.type === 'Bot' &&
+              c.body.includes('### Preview Deployment')
+            );
+
+            const params = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            };
+            if (existing) {
+              await github.rest.issues.updateComment({
+                ...params,
+                comment_id: existing.id,
                 body,
               });
             } else {
               await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
+                ...params,
                 issue_number: context.issue.number,
                 body,
               });
@@ -90,55 +110,68 @@ jobs:
       - name: Delete preview deployments
         uses: actions/github-script@v7
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          PROJECT_NAME: ${{ github.event.repository.name }}
-          BRANCH_ALIAS: pr-${{ github.event.pull_request.number }}
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ github.event.repository.name }}
+          BRANCH: pr-${{ github.event.pull_request.number }}
         with:
           script: |
-            const baseUrl = `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/pages/projects/${process.env.PROJECT_NAME}/deployments`;
+            const acct = process.env.CF_ACCOUNT;
+            const proj = process.env.PROJECT;
+            const base = 'https://api.cloudflare.com/client/v4';
+            const url = `${base}/accounts/${acct}` +
+              `/pages/projects/${proj}/deployments`;
             const headers = {
-              'Authorization': `Bearer ${process.env.CLOUDFLARE_API_TOKEN}`,
+              'Authorization': `Bearer ${process.env.CF_TOKEN}`,
               'Content-Type': 'application/json',
             };
 
-            // List deployments (with pagination) and delete those matching this PR's branch alias
             const deployments = [];
             let page = 1;
 
             while (true) {
-              const url = `${baseUrl}?page=${page}`;
-              const res = await fetch(url, { headers });
+              const res = await fetch(
+                `${url}?page=${page}`, { headers }
+              );
               if (!res.ok) {
-                core.warning(`Failed to list deployments on page ${page}: ${res.status}`);
+                core.warning(
+                  `Failed to list deployments: ${res.status}`
+                );
                 break;
               }
 
               const data = await res.json();
-              const pageDeployments = Array.isArray(data.result) ? data.result : [];
-              deployments.push(...pageDeployments);
+              const items = data.result || [];
+              deployments.push(...items);
 
               const info = data.result_info;
-              if (!info || typeof info.total_pages !== 'number' || page >= info.total_pages) {
+              if (!info || page >= (info.total_pages || 0)) {
                 break;
               }
-
               page += 1;
             }
-            const prDeployments = deployments.filter(
-              d => d.deployment_trigger?.metadata?.branch === process.env.BRANCH_ALIAS
+
+            const matched = deployments.filter(d =>
+              d.deployment_trigger?.metadata?.branch ===
+                process.env.BRANCH
             );
 
-            core.info(`Found ${prDeployments.length} deployment(s) for ${process.env.BRANCH_ALIAS}`);
+            core.info(
+              `Found ${matched.length} deployment(s) ` +
+              `for ${process.env.BRANCH}`
+            );
 
-            for (const d of prDeployments) {
-              const delRes = await fetch(`${baseUrl}/${d.id}?force=true`, {
+            for (const d of matched) {
+              const delUrl = `${url}/${d.id}?force=true`;
+              const res = await fetch(delUrl, {
                 method: 'DELETE',
                 headers,
               });
-              if (delRes.ok) {
+              if (res.ok) {
                 core.info(`Deleted deployment ${d.id}`);
               } else {
-                core.warning(`Failed to delete deployment ${d.id}: ${delRes.status}`);
+                core.warning(
+                  `Failed to delete ${d.id}: ${res.status}`
+                );
               }
             }
