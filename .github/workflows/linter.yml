@@ -14,10 +14,13 @@ name: Lint Code Base
 #############################
 # Start the job on all push #
 #############################
-on:
+on: # yamllint disable-line rule:truthy
   push:
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
 
 ###############
 # Set the Job #
